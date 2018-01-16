@@ -12,10 +12,10 @@ How to run the app
 ------------------
 1) Clone this repo 
 2) Run the following commands:
-
-
+```
     $ npm install
     $ npm start
+```
 Navigating to [http://localhost:3000](http://localhost:3000) in your browser should yield `OK` 
 
 How to run the tests
