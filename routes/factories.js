@@ -16,16 +16,17 @@ router.get('/', (req, res) => {
 
 router.get('/search', (req, res) => {
     const searchQuery = req.query.q;
+    let resultFactory = []
+    if (!searchQuery) return res.sendStatus(404);
     companyStore.list((err, factories) => {
         factories.forEach((factory, idx) => {
             if (factory.name === searchQuery && factory.company_type === "factory") {
-                res.json(factory);
-            } else if (idx === factories.length - 1 || searchQuery === undefined) {
-                res.sendStatus(404)
+                return resultFactory.push(factory)
             }
         });
+        resultFactory.length >= 1 ? res.send(resultFactory) : res.sendStatus(404);
     });
-});
+})
 
 router.get('/:id', (req, res) => {
     companyStore.load(req.params.id, (err, factory) => {
@@ -44,7 +45,7 @@ router.post('/', (req, res) => {
         state: req.body.state,
         company_type: 'factory'
     };
-    companyStore.add(newFactory, err => {
+    companyStore.add(newFactory, (err) => {
         if (err) throw err;
         res.json(newFactory);
     });

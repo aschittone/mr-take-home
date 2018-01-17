@@ -1,9 +1,22 @@
 const request = require('supertest');
+const companyStore = require('json-fs-store')('store/companies');
+
 
 describe('Brands', () => {
 	let app;
+	let data;
+	let deleteID;
 	beforeEach(() => {
 		app = require('../app.js');
+		companyStore.list((err, companyData) => {
+			data = companyData
+			deleteID = data.map((brand) => {
+				if (brand.company_type === 'brand') {
+					console.log(data)
+					return brand.id
+				}
+			})
+		});
 	});
 	afterEach(() => {
 		app.close();
@@ -15,7 +28,7 @@ describe('Brands', () => {
 			.expect(200)
 			.end((err, res) => {
 				if (err) return done.fail(err);
-				expect(res.body.length).toBeGreaterThan(0);
+				expect(res.body.length).toBeLessThan(data.length);
 				done(res);
 			});
 	});
@@ -27,6 +40,17 @@ describe('Brands', () => {
 			.end((err, res) => {
 				if (err) return done.fail(err);
 				expect(res.body).not.toBeNull();
+				done(res);
+			});
+	});
+
+	it('deletes a brand', done => {
+		request(app)
+			.delete(`/brands/${deleteID}/delete`)
+			.expect(200)
+			.end((err, res) => {
+				if (err) return done.fail(err);
+				expect(res.body.length).toBeGreaterThan(0);
 				done(res);
 			});
 	});
