@@ -21,10 +21,10 @@ router.get('/search', (req, res) => {
     companyStore.list((err, factories) => {
         factories.forEach((factory, idx) => {
             if (factory.name === searchQuery && factory.company_type === "factory") {
-                return resultFactory.push(factory)
+                resultFactory.push(factory)
             }
         });
-        resultFactory.length >= 1 ? res.send(resultFactory) : res.sendStatus(404);
+        resultFactory.length >= 1 ? res.json(resultFactory[0]) : res.sendStatus(404);
     });
 })
 
@@ -36,7 +36,8 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    if (!req.body) return res.sendStatus(400);
+    if (!req.body.name) return res.sendStatus(400);
+    debugger
     const newFactory = {
         name: req.body.name,
         email: req.body.email,
@@ -45,9 +46,25 @@ router.post('/', (req, res) => {
         state: req.body.state,
         company_type: 'factory'
     };
+    console.log(newFactory)
     companyStore.add(newFactory, (err) => {
         if (err) throw err;
         res.json(newFactory);
+    });
+});
+
+router.delete('/:id/delete', (req, res) => {
+    let resultFactories = []
+    companyStore.remove(req.params.id, (err) => {
+        if (err) throw err;
+    })
+    companyStore.list((err, factories) => {
+        factories.forEach((factory) => {
+            if (factory.company_type === "factory") {
+                resultFactories.push(factory)
+            }
+        })
+        res.json(resultFactories);
     });
 });
 

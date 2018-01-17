@@ -1,22 +1,28 @@
 const request = require('supertest');
 const companyStore = require('json-fs-store')('store/companies');
-
+const deleteBrand = {
+	id: 1,
+	name: 'Test Brand',
+	email: null,
+	phone_number: null,
+	city: null,
+	state: null,
+	company_type: 'brand'
+}
 
 describe('Brands', () => {
 	let app;
-	let data;
-	let deleteID;
-	beforeEach(() => {
+	let data = [];
+	beforeAll(() => {
 		app = require('../app.js');
-		companyStore.list((err, companyData) => {
-			data = companyData
-			deleteID = data.map((brand) => {
-				if (brand.company_type === 'brand') {
-					console.log(data)
-					return brand.id
+		companyStore.add(deleteBrand, err => { if (err) throw err; })
+		companyStore.list((err, brands) => {
+			brands.forEach((brand) => {
+				if (brand.company_type === "brand") {
+					data.push(brand);
 				}
 			})
-		});
+		})
 	});
 	afterEach(() => {
 		app.close();
@@ -28,14 +34,14 @@ describe('Brands', () => {
 			.expect(200)
 			.end((err, res) => {
 				if (err) return done.fail(err);
-				expect(res.body.length).toBeLessThan(data.length);
+				expect(res.body.length).toBeGreaterThan(0);
 				done(res);
 			});
 	});
 
 	it('gets a single brand', done => {
 		request(app)
-			.get('/brands/44763ebb-032c-4ba7-b3b4-2e2cc1b2fff3')
+			.get('/brands/ca357abb-573e-4a29-a731-b61bd40f6332')
 			.expect(200)
 			.end((err, res) => {
 				if (err) return done.fail(err);
@@ -46,11 +52,11 @@ describe('Brands', () => {
 
 	it('deletes a brand', done => {
 		request(app)
-			.delete(`/brands/${deleteID}/delete`)
+			.delete(`/brands/1/delete`)
 			.expect(200)
 			.end((err, res) => {
 				if (err) return done.fail(err);
-				expect(res.body.length).toBeGreaterThan(0);
+				expect(res.body.length).toBeLessThan(data.length);
 				done(res);
 			});
 	});

@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
 	companyStore.list((err, brands) => {
 		brands.forEach((brand) => {
 			if (brand.company_type === "brand") {
-				resultBrands.push(brand)
+				resultBrands.push(brand);
 			}
 		})
 		res.json(resultBrands);
@@ -21,10 +21,10 @@ router.get('/search', (req, res) => {
 	companyStore.list((err, brands) => {
 		brands.forEach((brand, idx) => {
 			if (brand.name === searchQuery && brand.company_type === "brand") {
-				return resultBrand.push(brand)
+				resultBrand.push(brand);
 			}
 		});
-		resultBrand.length >= 1 ? res.send(resultBrand) : res.sendStatus(404);
+		resultBrand.length >= 1 ? res.json(resultBrand[0]) : res.sendStatus(404);
 	});
 });
 
@@ -52,12 +52,18 @@ router.post('/', (req, res) => {
 });
 
 router.delete('/:id/delete', (req, res) => {
+	let resultBrands = []
 	companyStore.remove(req.params.id, (err) => {
 		if (err) throw err;
 	})
 	companyStore.list((err, brands) => {
-		res.json(brands)
-	})
-})
+		brands.forEach((brand) => {
+			if (brand.company_type === "brand") {
+				resultBrands.push(brand);
+			}
+		})
+		res.json(resultBrands);
+	});
+});
 
 module.exports = router;
