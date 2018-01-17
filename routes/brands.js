@@ -3,28 +3,27 @@ const companyStore = require('json-fs-store')('store/companies');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-	let resultBrands = []
+	const resultBrands = [];
 	companyStore.list((err, brands) => {
 		brands.forEach((brand) => {
-			if (brand.company_type === "brand") {
-				resultBrands.push(brand);
-			}
-		})
+			brand.company_type === "brand" ? resultBrands.push(brand) : null; // find and send only factories
+		});
 		res.json(resultBrands);
 	});
 });
 
 router.get('/search', (req, res) => {
 	const searchQuery = req.query.q;
-	let resultBrand = []
+	const resultBrand = [];
 	if (!searchQuery) return res.sendStatus(404);
 	companyStore.list((err, brands) => {
-		brands.forEach((brand, idx) => {
-			if (brand.name === searchQuery && brand.company_type === "brand") {
-				resultBrand.push(brand);
-			}
-		});
-		resultBrand.length >= 1 ? res.json(resultBrand[0]) : res.sendStatus(404);
+		for (let i = 0; i < brands.length; i++) {
+			if (brands[i].name === searchQuery && brands[i].company_type === "brand") {
+				resultBrand.push(brands[i]);
+				break;
+			};
+		};
+		resultBrand.length === 1 ? res.json(resultBrand) : res.sendStatus(404);
 	});
 });
 
@@ -52,18 +51,18 @@ router.post('/', (req, res) => {
 });
 
 router.delete('/:id/delete', (req, res) => {
-	let resultBrands = []
+	let resultBrands = [];
 	companyStore.remove(req.params.id, (err) => {
 		if (err) throw err;
 	})
+
+	// resend new list of just factories
 	companyStore.list((err, brands) => {
 		brands.forEach((brand) => {
-			if (brand.company_type === "brand") {
-				resultBrands.push(brand);
-			}
-		})
-		res.json(resultBrands);
+			brand.company_type === "brand" ? resultBrands.push(brand) : null;
+		});
 	});
+	res.json(resultBrands);
 });
 
 module.exports = router;
