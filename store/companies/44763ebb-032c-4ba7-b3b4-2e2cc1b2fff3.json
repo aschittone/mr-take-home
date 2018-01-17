@@ -1,3 +1,8 @@
 {
-  "name": "MCM Enterprises"
+  "name": "MCM Enterprises",
+  "email": null,
+  "phone_number": null,
+  "city ": null,
+  "state": null,
+  "company_type": "brand"
 }
