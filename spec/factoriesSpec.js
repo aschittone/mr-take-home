@@ -22,7 +22,7 @@ describe('Factories', () => {
 
     it('gets a single factory', done => {
         request(app)
-            .get('/factories/0a75d3f4-c8ff-47bb-84c3-a874007d1b4f') // admittedly, this is an ugly id.
+            .get('/factories/fae517bd-5dd7-4440-8e69-65f1b937fb2a') // admittedly, this is an ugly id.
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
@@ -34,19 +34,24 @@ describe('Factories', () => {
     it('creates a new factory', done => {
         request(app)
             .post('/factories')
-            .send({ name: 'Test Factory' })
+            .send({
+                name: 'Test Factory',
+                email: null,
+                phone_number: null,
+                city: null,
+                state: null
+            })
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
                 expect(res.body.name).toEqual('Test Factory');
-
                 done(res);
             });
     });
 
     it('finds an existing factory', done => {
         request(app)
-            .get('/factories/search?q=The Pattern Makers')
+            .get('/factories/search?q=Test Factory')
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
