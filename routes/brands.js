@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
 	const resultBrands = [];
 	companyStore.list((err, brands) => {
 		brands.forEach((brand) => {
-			brand.company_type === "brand" ? resultBrands.push(brand) : null; // find and send only factories
+			brand.company_type === "brand" ? resultBrands.push(brand) : null; // find and send only brands
 		});
 		res.json(resultBrands);
 	});
@@ -56,7 +56,7 @@ router.delete('/:id/delete', (req, res) => {
 		if (err) throw err;
 	})
 
-	// resend new list of just factories
+	// resend new list of just brands
 	companyStore.list((err, brands) => {
 		brands.forEach((brand) => {
 			brand.company_type === "brand" ? resultBrands.push(brand) : null;

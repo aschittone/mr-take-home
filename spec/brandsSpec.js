@@ -8,22 +8,21 @@ const deleteBrand = {
 	city: null,
 	state: null,
 	company_type: 'brand'
-}
+};
 
 describe('Brands', () => {
+
 	let app;
-	let data = [];
+	const data = [];
+
 	beforeAll(() => {
 		app = require('../app.js');
-		companyStore.add(deleteBrand, err => { if (err) throw err; })
-		companyStore.list((err, brands) => {
-			brands.forEach((brand) => {
-				if (brand.company_type === "brand") {
-					data.push(brand);
-				}
-			})
-		})
+		// add deleteBrand (defined at top of file), to later on delete, through test
+		companyStore.add(deleteBrand, err => { if (err) throw err; });
+		// put together list of brands prior to running tests
+		companyStore.list((err, brands) => { brands.forEach((brand) => { brand.company_type === "brand" ? data.push(brand) : null; }); });
 	});
+
 	afterEach(() => {
 		app.close();
 	});

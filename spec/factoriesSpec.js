@@ -8,21 +8,19 @@ const deleteFactory = {
     city: null,
     state: null,
     company_type: 'factory'
-}
+};
 
 describe('Factories', () => {
+
     let app;
-    let data = [];
+    const data = [];
+
     beforeAll(() => {
         app = require('../app.js');
+        // add deleteFactory (defined at top of file), to later on delete, through test
         companyStore.add(deleteFactory, err => { if (err) throw err });
-        companyStore.list((err, factories) => {
-            factories.forEach((factory) => {
-                if (factory.company_type === "factory") {
-                    data.push(factory)
-                };
-            });
-        });
+        // put together list of factories prior to running tests
+        companyStore.list((err, factories) => { factories.forEach((factory) => { factory.company_type === "factory" ? data.push(factory) : null; }); });
     });
 
     afterEach(() => {
