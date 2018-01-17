@@ -38,6 +38,26 @@ describe('Brands', () => {
 			});
 	});
 
+	it('should include name, email, phone_number, city, state, company_type', done => {
+		request(app)
+			.get('/brands/0a75d3f4-c8ff-47bb-84c3-a874007d1b4f')
+			.expect(200)
+			.end((err, res) => {
+				if (err) return done.fail(err);
+				const actual = Object.keys(res.body);
+				const expected = [
+					'name',
+					'email',
+					'phone_number',
+					'city',
+					'state',
+					'company_type'
+				];
+				expect(actual).toEqual(expected);
+				done(res);
+			});
+	});
+
 	it('gets a single brand', done => {
 		request(app)
 			.get('/brands/ca357abb-573e-4a29-a731-b61bd40f6332')

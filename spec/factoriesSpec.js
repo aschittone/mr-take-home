@@ -38,6 +38,26 @@ describe('Factories', () => {
             });
     });
 
+    it('should include name, email, phone_number, city, state, company_type', done => {
+        request(app)
+            .get('/factories/4fb77a81-4fec-4bb8-bc10-91c0ee5fe674')
+            .expect(200)
+            .end((err, res) => {
+                if (err) return done.fail(err);
+                const actual = Object.keys(res.body);
+                const expected = [
+                    'name',
+                    'email',
+                    'phone_number',
+                    'city',
+                    'state',
+                    'company_type'
+                ];
+                expect(actual).toEqual(expected);
+                done(res);
+            });
+    });
+
     it('gets a single factory', done => {
         request(app)
             .get('/factories/4fb77a81-4fec-4bb8-bc10-91c0ee5fe674') // admittedly, this is an ugly id.
