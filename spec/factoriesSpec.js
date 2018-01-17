@@ -51,7 +51,7 @@ describe('Factories', () => {
 
     it('deletes a factory', done => {
         request(app)
-            .delete(`/factories/2/delete`)
+            .delete(`/factories/2/delete`) // deletes factory that was added before test was ran
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
