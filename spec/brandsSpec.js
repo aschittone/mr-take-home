@@ -71,7 +71,7 @@ describe('Brands', () => {
 
 	it('deletes a brand', done => {
 		request(app)
-			.delete(`/brands/1/delete`) // deletes brand that was added before test was ran
+			.delete(`/brands/1`) // deletes brand that was added before test was ran
 			.expect(200)
 			.end((err, res) => {
 				if (err) return done.fail(err);

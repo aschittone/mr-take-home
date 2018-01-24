@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
 	});
 });
 
-router.delete('/:id/delete', (req, res) => {
+router.delete('/:id', (req, res) => {
 	let resultBrands = [];
 	companyStore.remove(req.params.id, (err) => {
 		if (err) throw err;

@@ -14,8 +14,11 @@ router.get('/', (req, res) => {
 
 router.get('/search', (req, res) => {
     const searchQuery = req.query.q;
+
     const resultFactory = [];
     if (!searchQuery) return res.sendStatus(404);
+
+
     companyStore.list((err, factories) => {
         for (let i = 0; i < factories.length; i++) {
             if (factories[i].name === searchQuery && factories[i].company_type === "factory") {
@@ -50,7 +53,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.delete('/:id/delete', (req, res) => {
+router.delete('/:id', (req, res) => {
     let resultFactories = [];
     companyStore.remove(req.params.id, (err) => {
         if (err) throw err;
